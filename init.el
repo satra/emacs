@@ -74,13 +74,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Jabber
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-library "ryan-jabber")
+;;(load-library "ryan-jabber")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Ryan's global keybindings and behaviour
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-library "ryan-keyboard")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;Ryan's global keybindings and behaviour
+;;Ryan's yas snippet setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-library "ryan-yasnippet")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -90,11 +90,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;CEDET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-library "ryan-cedet")
+;;(load-library "ryan-cedet")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Python mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-library "ryan-python")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Add back flymake mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-library "matthew-flymake")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;W3M mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -197,61 +201,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Magit mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-library "ryan-magit")
+;;(load-library "ryan-magit")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Startup gnus after loading other things
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(gnus)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;Custmoized Settings
+;;Matthew's keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-library "matthew-keyboard")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Customized Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(bbdb-file "~/.emacs.private/dot-bbdb")
- '(ecb-layout-name "left9")
- '(ecb-maximize-ecb-window-after-selection t)
- '(ecb-options-version "2.32")
- '(ecb-source-path (quote (("/" "/"))))
- '(ecb-tip-of-the-day nil)
- '(ecb-windows-width 0.2)
- '(erc-beep-match-types (quote (current-nick keyword)))
- '(erc-default-sound "~/.emacs.d/sounds/combeep4a.wav")
- '(erc-echo-timestamps t)
- '(erc-hide-timestamps t)
- '(erc-match-mode t)
- '(erc-modules (quote (button completion fill irccontrols log netsplit noncommands readonly ring scrolltobottom services smiley track)))
- '(erc-services-mode t)
- '(erc-sound-mode t)
- '(erc-sound-path (quote ("/home/ryan/.emacs.d/sounds")))
- '(erc-stamp-mode t)
- '(erc-user-full-name "Ryan McGuire")
- '(fill-column 81)
- '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
- '(gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
- '(jde-complete-function (quote jde-complete-in-line))
- '(jde-jdk (quote ("1.6.0")))
- '(jde-jdk-registry (quote (("1.6.0" . "/etc/opt/java"))))
- '(jde-sourcepath (quote ("/etc/opt/java/src" "$SDN_ROOT/src/java/")))
- '(mew-rc-file "~/.emacs.d/dot-mew.el" t)
- '(mouse-wheel-mode t)
- '(nxhtml-skip-welcome t)
- '(paren-match-face (quote paren-face-match-light))
- '(paren-sexp-mode t)
- '(svn-status-hide-unmodified t)
- '(svn-status-verbose nil)
- '(twit-mode t)
- '(user-mail-address "ryan@enigmacurry.com")
- '(w3m-default-display-inline-images t))
+ '(printer-name "gcl"))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(flymake-errline ((((class color)) (:background "DarkRed"))))
- '(flymake-warnline ((((class color)) (:background "DarkBlue"))))
- '(twit-title-face ((t (:background "gray15" :underline nil))))
- '(twit-zebra-1-face ((t (:background "color-234" :foreground "color-123"))))
- '(twit-zebra-2-face ((t (:background "color-235" :foreground "color-123")))))
+ '(default ((t (:height 120 :family "Lucida Console"))) t))
