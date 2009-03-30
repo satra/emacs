@@ -34,3 +34,6 @@ automake --add-missing
 ./configure
 make
 popd
+
+# rst.el
+wget http://docutils.sourceforge.net/tools/editors/emacs/rst.el
