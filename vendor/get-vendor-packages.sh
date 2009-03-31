@@ -23,7 +23,7 @@ rm nxhtml-1.75-090112.zip
 wget -c "http://www.thaiopensource.com/download/nxml-mode-20041004.tar.gz"
 tar xfvz nxml-mode-20041004.tar.gz
 rm nxml-mode-20041004.tar.gz
-ln -s nxml-mode-20041004 nxml-mode
+mv nxml-mode-20041004 nxml-mode
 
 #Jabber
 #Needs to be compiled
