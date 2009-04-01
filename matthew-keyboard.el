@@ -7,3 +7,5 @@
 (require 'doctest-mode)
 (global-set-key [f10]      'doctest-mode)
 (global-set-key [f11]      'rst-mode)
+; Command prompts for linenumber to go to.
+(global-set-key "\C-x\C-j" 'goto-line)

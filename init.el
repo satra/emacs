@@ -10,14 +10,22 @@
 ;;   paths. This makes it easier to use this config on
 ;;   multiple systems.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "~/.emacs.d")
 ;Add all top-level subdirectories of .emacs.d to the load path
+(add-to-list 'load-path "~/.emacs.d")
 (progn (cd "~/.emacs.d")
        (normal-top-level-add-subdirs-to-load-path))
 ;I like to keep third party libraries seperate in ~/.emacs.d/vendor
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (progn (cd "~/.emacs.d/vendor")
        (normal-top-level-add-subdirs-to-load-path))
+;; sometimes I want to keep other systemlike libraries in another path
+;; this (frankly) is for windows and pymacs.
+(when 
+    (file-accessible-directory-p "~/.emacs.site.d")
+  (add-to-list 'load-path "~/.emacs.site.d")
+  (cd "~/.emacs.site.d")
+  (normal-top-level-add-subdirs-to-load-path))
+;; But I want to start in my own home directory
 (cd "~")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;ELPA package manager
