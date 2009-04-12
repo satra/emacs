@@ -15,7 +15,9 @@
       (list "pyflakes" (list local-file))))
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pyflakes-init)))
-(add-hook 'find-file-hook 'flymake-find-file-hook)
+;; Autoload flymake with loading files
+;; this is Off for now, I turn it on manually
+;;(add-hook 'find-file-hook 'flymake-find-file-hook)
 (custom-set-faces
  '(flymake-errline ((((class color)) (:background "DarkRed"))))
  '(flymake-warnline ((((class color)) (:background "DarkBlue")))))
