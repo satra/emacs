@@ -6,12 +6,12 @@
 ;; Created: Nov 2003
 ;; Keywords: languages
 ;; URL: http://www.loveshack.ukfsn.org/emacs/
-;; $Revision: 1.18 $
+;; $Revision: 1.23 $
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
 
 ;; This file is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,16 +19,14 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
 ;; Major mode for editing Python, with support for inferior processes.
 
 ;; There is another Python mode, python-mode.el, used by XEmacs and
-;; maintained with Python.  That isn't covered by an FSF copyright
+;; previously maintained with Python.  That isn't covered by an FSF copyright
 ;; assignment, unlike this code, and seems not to be well-maintained
 ;; for Emacs (though I've submitted fixes).  This mode is rather
 ;; simpler and is better in other ways.  In particular, using the
@@ -61,6 +59,10 @@
 
 ;; There is support for both Python 2 and Python 3 languages and
 ;; interpreters using the emacs.py module in inferior processes.
+
+;; The support for Jython probably isn't useful, since Jython seems
+;; only to implement the Python 2.2 language, and so won't run
+;; emacs.py.
 
 ;; TODO: See various Fixmes below.
 
@@ -362,6 +364,16 @@ Used for syntactic keywords.  N is the match number (1, 2 or 3)."
 ;; Eric has items including: (un)indent, (un)comment, restart script,
 ;; run script, debug script; also things for profiling, unit testing.
 
+;; Fixme: In python 3, identifiers are generalized over Python 2:
+;;   identifier  ::=  id_start id_continue*
+;;   id_start    ::=  <all characters in general categories
+;;                     Lu, Ll, Lt, Lm, Lo, Nl, the underscore,
+;;                     and characters with the Other_ID_Start property>
+;;   id_continue ::=  <all characters in id_start,
+;;                     plus characters in the categories Mn, Mc, Nd, Pc
+;;                     and others with the Other_ID_Continue property>
+;; Without checking, I think that will mainly mean we should have
+;; more characters with symbol syntax.
 (defvar python-mode-syntax-table
   (let ((table (make-syntax-table)))
     ;; Give punctuation syntax to ASCII that normally has symbol
@@ -668,9 +680,10 @@ Set `python-indent' locally to the value guessed."
 	  (forward-line)
 	  (unless (python-comment-line-p)
 	    (let ((elt (assq (current-indentation) python-indent-list)))
-	      (setq python-indent-list
-		    (nconc (delete elt python-indent-list)
-			   (list elt))))))
+	      (if elt			; nil "can't" happen
+		  (setq python-indent-list
+			(nconc (delete elt python-indent-list)
+			       (list elt)))))))
 	(caar (last python-indent-list)))))))
 
 ;;;; Cycling through the possible indentations with successive TABs.
@@ -693,7 +706,7 @@ Set `python-indent' locally to the value guessed."
   '(("else" "if" "elif" "while" "for" "try" "except")
     ("elif" "if" "elif")
     ("except" "try" "except")
-    ("finally" "try" "except"))		; `except' for Python 2.5
+    ("finally" "try" "except" "else"))
   "Alist of keyword matches.
 The car of an element is a keyword introducing a statement which
 can close a block opened by a keyword in the cdr.")
@@ -922,9 +935,12 @@ multi-line bracketed expressions."
   (python-beginning-of-string)
   (let (point)
     (while (and (python-continuation-line-p)
-		(if point
-		    (< (point) point)
-		  t))
+		;; Check we make progress.  If it's a backslash
+		;; continuation line, we will move backwards below.
+		(or (python-backslash-continuation-line-p)
+		    (if point
+			(< (point) point)
+		      t)))
       (beginning-of-line)
       (if (python-backslash-continuation-line-p)
 	  (progn
@@ -1250,11 +1266,16 @@ Repeat ARG times."
       (indent-to indent))))
 (put 'python-backspace 'delete-selection 'supersede)
 
-;;;; pychecker
+;;;; pychecker, flymake
 
 (defcustom python-check-command "pychecker --stdlib"
-  "*Command used to check a Python file."
-  :type 'string
+  "*Command used to check a Python file.
+Possible commands include `pychecker', `pyflakes', and `pylint'."
+  :type '(choice
+	  (const "pychecker --stdlib")
+	  (const "pyflakes")
+	  (const "pylint -f parseable")
+	  (string :tag "Other command"))
   :group 'python)
 
 (defvar python-saved-check-command nil
@@ -1279,6 +1300,17 @@ See `python-check-command' for the default."
 	 (cons '("(\\([^,]+\\), line \\([0-9]+\\))" 1 2)
 	       compilation-error-regexp-alist)))
     (compilation-start command)))
+
+(defun python-flymake-init ()
+  "Flymake init function for Python.
+To be added to `flymake-init-create-temp-buffer-copy'."
+  (let ((checker-elts (split-string python-check-command)))
+    (list (car checker-elts) (append (cdr checker-elts)
+				     (list (buffer-file-name))))))
+
+(eval-after-load "flymake"
+  '(add-to-list 'flymake-allowed-file-name-masks
+		'("\\.py\\'" python-flymake-init)))
 
 ;;;; Inferior mode stuff (following cmuscheme).
 
@@ -1485,6 +1517,11 @@ Don't save anything for STR matching `inferior-python-filter-regexp'."
 
 (eval-when-compile (defvar python-source-modes)) ; forward declaration
 
+(defcustom python-process-kill-without-query nil
+  "Non-nil means don't query killing Python process when Emacs exits."
+  :group 'python
+  :type 'boolean)
+
 ;;;###autoload
 (defun run-python (&optional cmd noshow new)
   "Run an inferior Python process, input and output via buffer *Python*.
@@ -1531,6 +1568,10 @@ buffer for a list of commands.)"
 	(set (make-local-variable 'python-command) cmd)
 	(setq-default python-buffer (current-buffer))
 	(setq python-buffer (current-buffer))
+	(if (and python-process-kill-without-query
+		 (comint-check-proc (current-buffer)))
+	    (set-process-query-on-exit-flag
+	     (get-buffer-process (current-buffer)) nil))
 	(accept-process-output (get-buffer-process python-buffer) 5)
 	(inferior-python-mode)
 	;; There's a security risk if we're invoked in a world-writable
@@ -1797,26 +1838,26 @@ process."
   "`eldoc-print-current-symbol-info' for Python.
 Only works when point is in a function name, not its arg list, for
 instance.  Assumes an inferior Python is running."
-  (let ((symbol (with-syntax-table python-dotty-syntax-table
-		  (current-word))))
-    ;; First try the symbol we're on.
-    (or (and symbol
-	     (python-send-receive (format "emacs.eargs(%S, %s)"
-					  symbol python-imports)))
-	;; Try moving to symbol before enclosing parens.
-	(let ((s (syntax-ppss)))
-	  (unless (zerop (car s))
-	    (when (eq ?\( (char-after (nth 1 s)))
-	      (save-excursion
-		(goto-char (nth 1 s))
-		(skip-syntax-backward "-")
-		(let ((point (point)))
-		  (skip-chars-backward "a-zA-Z._")
-		  (if (< (point) point)
-		      (python-send-receive
-		       (format "emacs.eargs(%S, %s)"
-			       (buffer-substring-no-properties (point) point)
-			       python-imports)))))))))))
+  (with-syntax-table python-dotty-syntax-table
+    (let ((symbol (current-word)))
+      ;; First try the symbol we're on.
+      (or (and symbol
+	       (python-send-receive (format "emacs.eargs(%S, %s)"
+					    symbol python-imports)))
+	  ;; Try moving to symbol before enclosing parens.
+	  (let ((s (syntax-ppss)))
+	    (unless (zerop (car s))
+	      (when (eq ?\( (char-after (nth 1 s)))
+		(save-excursion
+		  (goto-char (nth 1 s))
+		  (skip-syntax-backward "-")
+		  (let ((point (point)))
+		    (skip-syntax-backward "w_")
+		    (if (< (point) point)
+			(python-send-receive
+			 (format "emacs.eargs(%S, %s)"
+				 (buffer-substring-no-properties (point) point)
+				 python-imports))))))))))))
 
 ;;;; Info-look functionality.
 
@@ -1867,7 +1908,7 @@ Used with `eval-after-load'."
 				  (setq version (match-string 1 file)
 					found t)))))
 			found)
-		    (error nil)))))))))
+		    (error)))))))))
     (info-lookup-maybe-add-help
      :mode 'python-mode
      :regexp "[[:alnum:]_]+"
@@ -1950,7 +1991,7 @@ the string's indentation."
 	(let* ((syntax (syntax-ppss))
 	       (orig (point))
 	       start end)
-	  (cond ((nth 4 syntax)	; comment.   fixme: loses with trailing one
+	  (cond ((nth 4 syntax)	; comment.   Fixme: loses with trailing one
 		 (let (fill-paragraph-function)
 		   (fill-paragraph justify)))
 		;; The `paragraph-start' and `paragraph-separate'
@@ -2010,7 +2051,8 @@ END lie.  It is an error if any lines in the region are indented less than
 COUNT columns."
   (interactive (if mark-active
 		   (list (region-beginning) (region-end) current-prefix-arg)
-		 (list (point) (point) current-prefix-arg)))
+		 (list (line-beginning-position) (line-end-position 2)
+		       current-prefix-arg)))
   (if count
       (setq count (prefix-numeric-value count))
     (setq count python-indent))
@@ -2033,7 +2075,8 @@ current line.  The region shifted includes the lines in which START and
 END lie."
   (interactive (if mark-active
 		   (list (region-beginning) (region-end) current-prefix-arg)
-		 (list (point) (point) current-prefix-arg)))
+		 (list (line-beginning-position) (line-end-position 2)
+		       current-prefix-arg)))
   (if count
       (setq count (prefix-numeric-value count))
     (setq count python-indent))
@@ -2086,9 +2129,6 @@ Uses `python-beginning-of-block', `python-end-of-block'."
       (python-end-of-block)
       (exchange-point-and-mark))))
 
-;; Fixme:  Provide a find-function-like command to find source of a
-;; definition (separate from BicycleRepairMan).  Complicated by
-;; finding the right qualified name.
 
 ;;;; Completion.
 
@@ -2428,6 +2468,10 @@ without confirmation."
 				   ))
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
   (set (make-local-variable 'comment-start) "# ")
+  (set (make-local-variable 'comment-start-skip)
+       "\\(\\(^\\|[^\\\\\n]\\)\\(\\\\\\\\\\)*\\)#+ *")
+  (set (make-local-variable 'comment-end-skip)
+       "[ \t]*\\(\\s>\\|\n\\)")
   (set (make-local-variable 'indent-line-function) #'python-indent-line)
   (set (make-local-variable 'indent-region-function) #'python-indent-region)
   (set (make-local-variable 'paragraph-start) "\\s-*$")
@@ -2527,7 +2571,9 @@ mode to use it.
 See also \\[python-3-mode].
 
 \\{python-mode-map}"
-  (font-lock-add-keywords nil python-2-font-lock-keywords 'append))
+  (font-lock-add-keywords nil python-2-font-lock-keywords 'append)
+  ;; Not propagating as it does in Emacs 21 for some reason.
+  (setq local-abbrev-table python-mode-abbrev-table))
 
 (defcustom python-default-version 2
   "Which version of the language is supported by \\[python-mode].
@@ -2595,7 +2641,9 @@ mode to use it.
 See also \\[python-2-mode].
 
 \\{python-mode-map}"
-  (font-lock-add-keywords nil python-3-font-lock-keywords 'append))
+  (font-lock-add-keywords nil python-3-font-lock-keywords 'append)
+  ;; Not propagating as it does in Emacs 21 for some reason.
+  (setq local-abbrev-table python-mode-abbrev-table))
 
 ;; Not done automatically in Emacs 21 or 22.
 (defcustom python-mode-hook nil
@@ -2611,6 +2659,7 @@ See also \\[python-2-mode].
 (custom-add-option 'python-mode-hook 'abbrev-mode)
 (custom-add-option 'python-mode-hook 'python-setup-brm)
 (custom-add-option 'python-mode-hook 'flyspell-prog-mode)
+(custom-add-option 'python-mode-hook 'flymake-mode)
 
 ;;;###autoload
 (define-derived-mode jython-mode python-mode  "Jython"

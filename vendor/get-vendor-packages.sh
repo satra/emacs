@@ -37,3 +37,10 @@ popd
 
 # rst.el
 wget http://docutils.sourceforge.net/tools/editors/emacs/rst.el
+
+# python mode
+pushd dave-loves-python-mode
+wget -N http://www.loveshack.ukfsn.org/emacs/python.el
+wget -N http://www.loveshack.ukfsn.org/emacs/sym-comp.el
+wget -N http://www.loveshack.ukfsn.org/emacs/emacs.py
+popd
