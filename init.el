@@ -124,7 +124,7 @@
 ;;Java/Javascript
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;disabled till I get JDE to compile from the submodule correctly
-;(load-library "ryan-java")
+(load-library "ryan-java")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Groovy
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -164,7 +164,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Mac OSX stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-library "ryan-OSX")
+;(load-library "ryan-OSX")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;EasyPG stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -212,6 +212,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;(load-library "ryan-magit")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Emms
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-library "ryan-emms")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Startup gnus after loading other things
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(gnus)
@@ -239,8 +243,42 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+<<<<<<< HEAD:init.el
  '(printer-name "gcl")
  '(safe-local-variable-values (quote ((py-indent-offset . 4)))))
+=======
+ '(bbdb-file "~/.emacs.private/dot-bbdb")
+ '(ecb-layout-name "left9")
+ '(ecb-maximize-ecb-window-after-selection t)
+ '(ecb-options-version "2.32")
+ '(ecb-source-path (quote (("/" "/"))))
+ '(ecb-tip-of-the-day nil)
+ '(ecb-windows-width 0.2)
+ '(erc-beep-match-types (quote (current-nick keyword)))
+ '(erc-default-sound "~/.emacs.d/sounds/combeep4a.wav")
+ '(erc-echo-timestamps t)
+ '(erc-hide-timestamps t)
+ '(erc-match-mode t)
+ '(erc-modules (quote (button completion fill irccontrols log netsplit noncommands readonly ring scrolltobottom services smiley track)))
+ '(erc-services-mode t)
+ '(erc-sound-mode t)
+ '(erc-sound-path (quote ("/home/ryan/.emacs.d/sounds")))
+ '(erc-stamp-mode t)
+ '(erc-user-full-name "Ryan McGuire")
+ '(fill-column 81)
+ '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+ '(gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
+ '(mew-rc-file "~/.emacs.d/dot-mew.el" t)
+ '(mouse-wheel-mode t)
+ '(nxhtml-skip-welcome t)
+ '(paren-match-face (quote paren-face-match-light))
+ '(paren-sexp-mode t)
+ '(svn-status-hide-unmodified t)
+ '(svn-status-verbose nil)
+ '(twit-mode t)
+ '(user-mail-address "ryan@enigmacurry.com")
+ '(w3m-default-display-inline-images t))
+>>>>>>> ryan-emacs/master:init.el
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
