@@ -44,3 +44,6 @@ wget -N http://www.loveshack.ukfsn.org/emacs/python.el
 wget -N http://www.loveshack.ukfsn.org/emacs/sym-comp.el
 wget -N http://www.loveshack.ukfsn.org/emacs/emacs.py
 popd
+
+# Cython mode
+wget -r http://hg.cython.org/cython/raw-file/55e5ddc03e3b/Tools/cython-mode.el
