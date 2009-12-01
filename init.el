@@ -27,6 +27,8 @@
   (normal-top-level-add-subdirs-to-load-path))
 ;; But I want to start in my own home directory
 (cd "~")
+;; Add necessary paths for Darwin
+(load-library "osx-path.el")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;ELPA package manager
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
