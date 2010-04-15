@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*-
+;; -*- emacs-lisp -*- <10/04/14 23:16:20 /Users/satra/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -180,4 +180,6 @@
   ("local-decoding" base64-decode-region)
   ("remote-encoding" tramp-perl-encode-with-module)
   ("remote-decoding" tramp-perl-decode-with-module)
-  ("uid-integer" 0)))
+  ("uid-integer" 0))
+ (["ssh" nil "s16" nil]
+  nil))

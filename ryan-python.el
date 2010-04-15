@@ -10,7 +10,7 @@
 ;The following directory has a .nosearch file in it therefore it not in
 ;the current load-path and the default python-mode will be used instead
 ;The following loads Dave Love's python mode:
-(add-to-list 'load-path "~/.emacs.d/dave-loves-python-mode")
+;(add-to-list 'load-path "~/.emacs.d/dave-loves-python-mode")
 (load-library "python")
 
 (autoload 'python-mode "python-mode" "Python Mode." t)

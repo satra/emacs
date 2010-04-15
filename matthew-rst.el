@@ -2,5 +2,6 @@
 ;; rst mode hooks
 (require 'rst)
 (setq auto-mode-alist
-      (append '(("\\.rst$" . rst-mode)
+      (append '(("\\.txt$" . rst-mode)
+                ("\\.rst$" . rst-mode)
 		("\\.rest$" . rst-mode)) auto-mode-alist))
